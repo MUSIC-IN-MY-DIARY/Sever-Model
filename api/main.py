@@ -6,6 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # default Settings for Fastapi
 
+from router.question.question import question_router
+# Modules
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -14,9 +17,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-@app.get("/")
-async def testing_get():
-    return {"say" : "Hello World"}
+app.include_router(question_router)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
