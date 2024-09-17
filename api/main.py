@@ -1,2 +1,3 @@
-from fastapi import FastAPI, Depends
+from config.models import test
 
+print(test())
