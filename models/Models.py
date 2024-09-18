@@ -2,7 +2,7 @@ from openai import OpenAI
 import pandas as pd
 # openai API
 
-from common.Authentication import Authentication
+from config.Authentication import Authentication
 # Modules
 
 from typing import List, Dict
@@ -54,7 +54,8 @@ class Embedding_Chatbot:
 
                     },
                     {
-                        "role": "user", "content": f"Context: {context}\n\n---\n\nQuestion: {question}, 한국어로 번역해서 대답해"
+                        "role": "user",
+                        "content": f"Context: {context}\n\n---\n\nQuestion: {question}, 한국어로 번역해서 대답해"
                     },
                 ],
                 temperature=0,
