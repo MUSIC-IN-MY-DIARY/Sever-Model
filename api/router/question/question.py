@@ -2,8 +2,7 @@ from fastapi import APIRouter
 # default Settings
 
 from .question_schemas import *
-from models.Models import *
-from config.InsertData import *
+from models.Models import Embedding_Chatbot
 # Modules
 
 question_router = APIRouter(
