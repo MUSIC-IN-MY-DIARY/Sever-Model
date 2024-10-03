@@ -1,8 +1,8 @@
-from data.InsertData import InsertData
+from Service.InsertData import InsertData
 
 def main():
     # JSON 파일 경로 설정 (사용자 환경에 맞게 변경)
-    json_file = '/Users/uicheol_hwang/Sever-Model/config/test_data.json'
+    json_file = '/Users/uicheol_hwang/Sever-Model/data/test_data.json'
 
     # InsertData 인스턴스 생성
     data_insert = InsertData(json_file)

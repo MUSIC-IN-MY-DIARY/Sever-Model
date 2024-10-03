@@ -51,7 +51,7 @@ coverage.xml
 .pytest_cache/
 cover/
 
-config/Auth/.env
+.env
 
 # Translations
 *.mo

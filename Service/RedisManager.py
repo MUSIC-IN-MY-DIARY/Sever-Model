@@ -6,7 +6,7 @@ from redis.commands.search.indexDefinition import IndexDefinition
 from redis.exceptions import ResponseError
 
 # KeyChain Settings
-from Auth.Authentication import Authentication
+from .Authentication import Authentication
 
 class RedisVectorStore:
     def __init__(self, index_name='artist_vector_store'):
