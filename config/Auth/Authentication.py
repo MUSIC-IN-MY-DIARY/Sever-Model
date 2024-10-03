@@ -5,6 +5,8 @@ from typing import List, Dict
 
 class Authentication:
     def __init__(self):
-        load_dotenv("/config/.env")
-    def get_token(self: str) -> str:
+        load_dotenv("/Users/uicheol_hwang/Sever-Model/config/Auth/.env")
+
+    @classmethod
+    def get_token(cls : str) -> str:
         return os.getenv('OPENAI_API_KEY')
