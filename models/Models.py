@@ -2,7 +2,7 @@ from openai import OpenAI
 import pandas as pd
 # openai API
 
-from config.Authentication import Authentication
+from config.Auth.Authentication import Authentication
 # Modules
 
 from typing import List, Dict
