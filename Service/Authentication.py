@@ -5,7 +5,7 @@ from typing import List, Dict
 
 class Authentication:
     def __init__(self):
-        load_dotenv("/Users/uicheol_hwang/Sever-Model/config/Auth/.env")
+        load_dotenv("/Users/uicheol_hwang/Sever-Model/.env")
 
     @classmethod
     def get_token(cls : str) -> str:
