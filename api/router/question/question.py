@@ -1,7 +1,10 @@
-from fastapi import APIRouter
+from http.client import HTTPException
+
+from fastapi import APIRouter, HTTPException
 # default Settings
 
-from .question_schemas import *
+from .question_schemas import QuestionSchema,AnswerSchema
+from service.Models import Embedding_Chatbot
 
 # Modules
 
@@ -13,9 +16,15 @@ question_router = APIRouter(
 
 # 기본 프레픽스, /question 이라는 엔드포인트로 띄워자게    됨
 
-@question_router.post("/", response_model=QuestionSchema)
-async def read_root():
-    return "hello"
+@question_router.post("/", response_model=AnswerSchema)
+async def question_models(question: QuestionSchema):
+    chatbot = Embedding_Chatbot()
+    try:
+        answer_text = chatbot.answer_question(question.question)
+        return AnswerSchema(answer=answer_text)
+    except Exception as e :
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 
