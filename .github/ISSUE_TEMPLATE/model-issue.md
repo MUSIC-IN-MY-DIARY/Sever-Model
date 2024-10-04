@@ -44,7 +44,9 @@ assignees: ''
 
 ## 캡쳐
 ![이미지1](../image/image1.png)
+
 ~~모듈 임포트 실패~~
 
 ![이미지2](../image/image2.png)
+
 ~~기존 참조 범위를 벗어난 오류~~
