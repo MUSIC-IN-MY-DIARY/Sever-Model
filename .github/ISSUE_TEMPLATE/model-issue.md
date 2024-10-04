@@ -21,20 +21,26 @@ assignees: ''
 
 ### 트리구조 
 
-api
-├── init.py
-├── pycache
-└── router
-data
-data_load.py
-main.py
-service
-├── Authentication.py
-├── InsertData.py
-├── Models.py
-├── RedisManager.py
-├── init.py
-└── pycache
+```bash
+├── api
+│   ├── __init__.py
+│   ├── __pycache__
+│   └── router
+├── data
+├── data_load.py
+├── main.py
+├── service
+│   ├── Authentication.py
+│   ├── InsertData.py
+│   ├── Models.py
+│   ├── RedisManager.py
+│   ├── __init__.py
+│   └── __pycache__
+└── venv
+    ├── bin
+    ├── include
+    └── lib
+```
 
 ## 캡쳐
 ![이미지1](../image/image1.png)
