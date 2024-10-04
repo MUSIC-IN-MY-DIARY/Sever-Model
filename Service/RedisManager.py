@@ -1,9 +1,13 @@
+# necessary packages
 from openai import OpenAI
 import numpy as np
+
+# Redis Modules
 from redis import Redis
 from redis.commands.search.field import TextField, VectorField
 from redis.commands.search.indexDefinition import IndexDefinition
 from redis.exceptions import ResponseError
+from redis.commands.search.query import Query
 
 # KeyChain Settings
 from .Authentication import Authentication
@@ -102,9 +106,18 @@ class RedisVectorStore:
         params_dict = {
             "vec_param" : np_query_embedding,
         }
+        try:
+            # Query 객체 생성 및 다이얼렉트 설정
+            q = Query(query) \
+                .return_fields("content","이름", "그룹", "특징", "dist") \
+                .sort_by("dist") \
+                .paging(0, top_k) \
+                .dialect(2)  # 다이얼렉트 2로 설정
 
-        results = self.redis_conn.ft(self.index_name).search(query, query_params=params_dict)
-        for doc in results.docs:
-            print(f"Document ID: {doc.id}, 이름: {doc['이름']}, 그룹: {doc['그룹']}, 특징: {doc['특징']}, Distance: {doc.dist}")
+            results = self.redis_conn.ft(self.index_name).search(q, query_params=params_dict)
+            return results.docs  # 검색된 문서 리스트 반환
+        except Exception as e:
+            print(f"Error during search: {e}")
+            return []
 
 

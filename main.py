@@ -1,12 +1,10 @@
 import uvicorn
-
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # default Settings for Fastapi
 
-from router.question.question import question_router
+from api.router.question.question import question_router
 # Modules
 
 app = FastAPI()
