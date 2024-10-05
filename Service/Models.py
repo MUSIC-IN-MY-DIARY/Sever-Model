@@ -13,8 +13,11 @@ class Embedding_Chatbot:
             api_key=Authentication().get_token()
         )
         self.model_id = 'text-embedding-3-small'
-        self.embedding_model = self.client.embeddings.create
+        self.embedding_model = self.client \
+            .embeddings\
+            .create
         self.vector_store = RedisVectorStore()
+
         # 기초 model parts 생성
     def get_embedding(self, text: str) -> List[float]:
         text = text.replace('\n', ' ')
@@ -24,7 +27,8 @@ class Embedding_Chatbot:
         ).data[0].embedding
 
     def create_context(self, question: str, max_len: int = 1800) -> str:
-        simliar_docs = self.vector_store.search_similar_artist(question, top_k= 5)
+        simliar_docs = self.vector_store \
+            .search_similar_artist(question, top_k= 5)
         if not simliar_docs:
             return ""
         cur_len = 0
@@ -44,7 +48,10 @@ class Embedding_Chatbot:
             return "I don't know"
 
         try:
-            response = self.client.chat.completions.create(
+            response = self.client \
+                .chat\
+                .completions \
+                .create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {
@@ -59,7 +66,9 @@ class Embedding_Chatbot:
                 ],
                 temperature=0,
             )
-            return response.choices[0].message.content.strip()
+            return response.choices[0] \
+                .message \
+                .content.strip()
         except Exception as e:
             print(e)
             return "I don't know"
