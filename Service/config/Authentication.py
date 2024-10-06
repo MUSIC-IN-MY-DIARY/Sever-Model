@@ -1,7 +1,7 @@
 # API key 통합 보관함
 from dotenv import load_dotenv
 import os
-from typing import List, Dict
+
 
 class Authentication:
     def __init__(self):

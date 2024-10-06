@@ -32,7 +32,7 @@ assignees: ''
 ├── service
 │   ├── Authentication.py
 │   ├── InsertData.py
-│   ├── Models.py
+│   ├── Embedding_Chatbot.py
 │   ├── RedisManager.py
 │   ├── __init__.py
 │   └── __pycache__
