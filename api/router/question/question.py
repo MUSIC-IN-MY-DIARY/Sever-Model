@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 # default Settings
 
 from .question_schemas import QuestionSchema,AnswerSchema
-from service.Models import Embedding_Chatbot
+from service.model.Embedding_Chatbot import Embedding_Chatbot
 
 # Modules
 

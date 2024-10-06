@@ -1,4 +1,4 @@
-from service.InsertData import InsertData
+from data.redis_data import InsertData
 
 def main():
     # JSON 파일 경로 설정 (사용자 환경에 맞게 변경)
