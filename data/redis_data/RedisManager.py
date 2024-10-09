@@ -1,16 +1,8 @@
-# necessary packages
-from openai import OpenAI
-import numpy as np
-
 # Redis Modules
 from redis import Redis
 from redis.commands.search.field import TextField, VectorField
 from redis.commands.search.indexDefinition import IndexDefinition
 from redis.exceptions import ResponseError
-from redis.commands.search.query import Query
-
-# KeyChain Settings
-from service.config.Authentication import Authentication
 
 class RedisVectorStore:
     def __init__(self, index_name='artist_vector_store'):
@@ -85,39 +77,5 @@ class RedisVectorStore:
             "embedding": np_embedding  # 임베딩 벡터 저장
         })
         print(f"Inserted data for {artist_info['이름']}")
-
-    def search_similar_artist(self, query_text: str, top_k: int = 3):
-        """
-        입력 테스트와 유사한 아티스트 벡터를 검색
-        :param query_text:
-        :param top_k:
-        :return:
-        """
-
-        query_response = self.client.embeddings.create(
-            input=[query_text],
-            model='text-embedding-3-small'
-        )
-        query_embedding = query_response.data[0].embedding
-
-        np_query_embedding = np.array(query_embedding, dtype=np.float32).tobytes()
-
-        query = f"*=>[KNN {top_k} @embedding $vec_param AS dist]"
-        params_dict = {
-            "vec_param" : np_query_embedding,
-        }
-        try:
-            # Query 객체 생성 및 다이얼렉트 설정
-            q = Query(query) \
-                .return_fields("content","이름", "그룹", "특징", "dist") \
-                .sort_by("dist") \
-                .paging(0, top_k) \
-                .dialect(2)  # 다이얼렉트 2로 설정
-
-            results = self.redis_conn.ft(self.index_name).search(q, query_params=params_dict)
-            return results.docs  # 검색된 문서 리스트 반환
-        except Exception as e:
-            print(f"Error during search: {e}")
-            return []
 
 
