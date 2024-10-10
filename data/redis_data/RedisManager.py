@@ -9,10 +9,6 @@ class RedisVectorStore:
         self.index_name = index_name
         self.redis_conn = Redis(host='localhost', port=6379, db=0)
 
-        self.client = OpenAI(
-            api_key=Authentication().get_token()
-        )
-
     def create_vector_index(self):
         """RediSearch 인덱스 생성"""
         try:
