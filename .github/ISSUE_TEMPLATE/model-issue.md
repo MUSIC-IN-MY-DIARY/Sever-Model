@@ -22,24 +22,25 @@ assignees: ''
 ### 트리구조 
 
 ```bash
-├── api
-│   ├── __init__.py
-│   ├── __pycache__
-│   └── router
+.
+├── LICENSE
+├── README.md
 ├── data
-├── data_load.py
-├── main.py
+│   ├── data_load.py
+│   ├── redis_data
+│   └── test_data.json
 ├── service
-│   ├── Authentication.py
-│   ├── InsertData.py
-│   ├── Embedding_Chatbot.py
-│   ├── RedisManager.py
-│   ├── __init__.py
-│   └── __pycache__
+│   ├── __pycache__
+│   ├── api
+│   ├── config
+│   ├── main.py
+│   ├── model
+│   └── requirments.txt
 └── venv
     ├── bin
     ├── include
-    └── lib
+    ├── lib
+    └── pyvenv.cfg
 ```
 
 ## 캡쳐
