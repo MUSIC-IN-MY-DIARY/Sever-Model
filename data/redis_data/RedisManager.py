@@ -1,13 +1,19 @@
 # Redis Modules
 from redis import Redis
-from redis.commands.search.field import TextField, VectorField
+from redis.commands.search.field import TextField, VectorField, NumericField
 from redis.commands.search.indexDefinition import IndexDefinition
 from redis.exceptions import ResponseError
+import numpy as np
+from openai import OpenAI
+
+from config.Authentication import AuthenticationData
+
 
 class RedisVectorStore:
     def __init__(self, index_name='artist_vector_store'):
         self.index_name = index_name
         self.redis_conn = Redis(host='localhost', port=6379, db=0)
+        self.client = OpenAI(api_key=AuthenticationData().get_token())
 
     def create_vector_index(self):
         """RediSearch 인덱스 생성"""
@@ -20,18 +26,24 @@ class RedisVectorStore:
             if "Index does not exist" in str(e) or "Unknown index name" in str(e):
                 print(f"Index '{self.index_name}' not found, creating a new one...")
                 schema = (
-                    TextField("이름", weight=1.0),      # 숫자형 `WEIGHT` 값으로 설정
-                    TextField("본명", weight=0.8),
-                    TextField("생년월일", weight=0.5),
-                    TextField("데뷔", weight=0.6),
-                    TextField("그룹", weight=1.0),
-                    TextField("히트곡", weight=0.9),
-                    TextField("특징", weight=1.2),
-                    VectorField("embedding",
-                                "FLAT",
-                                {"TYPE": "FLOAT32",
-                                 "DIM": 1536,
-                                 "DISTANCE_METRIC": "COSINE"})
+                    TextField("title", weight=5.0),      # 곡 제목 필드
+                    TextField("artist", weight=3.0),     # 아티스트 이름 필드
+                    TextField("album", weight=2.0),      # 앨범 이름 필드
+                    TextField("genre", weight=1.0),      # 장르 필드
+                    NumericField("release_date"),        # 발매일 필드
+                    TextField("lyrics", weight=1.0),     # 가사 필드 (저작권 고려 필요)
+                    TextField("image"),                  # 이미지 URL 필드
+                    TextField("song_id"),                # 곡 ID 필드
+                    TextField("artist_id"),              # 아티스트 ID 필드
+                    TextField("album_id"),               # 앨범 ID 필드
+                    NumericField("sys_date"),            # 아티스트 데뷔년도 필드 추가
+                    VectorField("embedding",             # 임베딩 필드
+                                "FLAT",  # 또는 "HNSW" (검색 성능에 따라 선택)
+                                {
+                                    "TYPE": "FLOAT32",
+                                    "DIM": 1536,
+                                    "DISTANCE_METRIC": "COSINE"
+                                })
                 )
                 # 인덱스 생성
                 self.redis_conn.ft(self.index_name).create_index(
@@ -44,34 +56,52 @@ class RedisVectorStore:
                 raise e
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
-    def insert_data(self, artist_id: str, artist_info: dict):
+
+    def insert_data(self, id: str, data: dict, data_type: str = 'song'):
         """
-        아티스트 데이터를 임베딩으로 변환하여 Redis에 삽입
-        :param self:
-        :param artist_id:
-        :param artist_info:
-        :return:
+        데이터를 임베딩으로 변환하여 Redis에 삽입
+        :param id: 곡 ID 또는 아티스트 ID
+        :param data: 곡 정보 또는 아티스트 정보 딕셔너리
+        :param data_type: 'song' 또는 'artist'로 데이터 유형 지정
+        :return: None
         """
-        content = f"{artist_info['이름']} ({artist_info['본명']}), {artist_info['그룹']}, 생년월일: {artist_info['생년월일']}, 히트곡: {', '.join(artist_info['히트곡'])}, 특징: {artist_info['특징']}"
+        if data_type == 'song':
+            # 곡 데이터 처리
+            content = f"{data['title']} by {data['artist']}, from album: {data['album']}, genre: {data['song_detail']['genre']}, released on: {data['song_detail']['sys_date']}"
+            # Embedding 생성
+            response = self.client.embeddings.create(
+                input=[content],
+                model='text-embedding-3-small'
+            )
+            embedding = response.data[0].embedding
 
-        # Embbeding 생성
-        response = self.client.embeddings.create(
-            input=[content],
-            model='text-embedding-3-small'
-        )
-        embedding = response.data[0].embedding
+            np_embedding = np.array(embedding, dtype=np.float32).tobytes()
 
-        np_embedding = np.array(embedding, dtype=np.float32).tobytes()
-        self.redis_conn.hset(f"{self.index_name}:{artist_id}", mapping={
-            "이름": artist_info['이름'],
-            "본명": artist_info['본명'],
-            "생년월일": artist_info['생년월일'],
-            "그룹": artist_info['그룹'],
-            "히트곡": ', '.join(artist_info['히트곡']),
-            "특징": artist_info['특징'],
-            "content": content,  # 전체 내용을 content 필드에 저장
-            "embedding": np_embedding  # 임베딩 벡터 저장
-        })
-        print(f"Inserted data for {artist_info['이름']}")
+            # Redis에 데이터 저장
+            self.redis_conn.hset(f"{self.index_name}:{id}", mapping={
+                "title": data['title'],
+                "artist": data['artist'],
+                "album": data['album'],
+                "genre": data['song_detail']['genre'],  # song_detail에서 가져온 genre
+                "lyrics": data['song_detail']['lyric'],
+                "image": data['image'],
+                "song_id": data['song_id'],
+                "artist_id": data['song_detail']['artist_id'],
+                "album_id": data['song_detail']['album_id'],
+                "sys_date": data['song_detail']['sys_date'],
+                "content": content,  # 곡의 요약 정보
+                "embedding": np_embedding  # 임베딩 벡터 저장
+            })
+            print(f"Inserted data for song '{data['title']}'")
 
-
+        elif data_type == 'artist':
+            # 아티스트 데이터 처리 (title 없음)
+            content = f"Artist: {data['art_info']}, Debut: {data['debut_date']}"
+            # Redis에 아티스트 데이터 저장
+            self.redis_conn.hset(f"{self.index_name}:{id}", mapping={
+                "debut_date": data.get('debut_date', ''),
+                "art_info": ', '.join(data.get('art_info', [])),
+                "awards": ', '.join(data.get('awards', [])),
+                "content": content  # 아티스트 요약 정보
+            })
+            print(f"Inserted data for artist '{id}'")

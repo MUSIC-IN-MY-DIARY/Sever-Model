@@ -56,7 +56,7 @@ class Embedding_Chatbot:
         try:
             # Query 객체 생성 및 다이얼렉트 설정
             q = Query(query) \
-                .return_fields("content","이름", "그룹", "특징", "dist") \
+                .return_fields("content", "title", "artist", "album", "genre", "release_date", "lyrics", "image", "song_id", "artist_id", "album_id", "sys_date") \
                 .sort_by("dist") \
                 .paging(0, top_k) \
                 .dialect(2)  # 다이얼렉트 2로 설정
