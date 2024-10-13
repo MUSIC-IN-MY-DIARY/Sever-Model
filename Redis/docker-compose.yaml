@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  VectorStores:
+    build:
+      context: .
+      dockerfile: Dockerfile  # 해당 Dockerfile을 참조해 빌드
+    image: redis-vector-store
+    container_name: VectorStore
+    command : /bin/bash -c "redis-server --requirepass $$REDIS_PASSWORD"
+
+    env_file:
+      - .env  # 루트 디렉토리의 .env 파일을 사용할 수 있도록 설정
