@@ -11,3 +11,4 @@ services:
 
     env_file:
       - .env  # 루트 디렉토리의 .env 파일을 사용할 수 있도록 설정
+

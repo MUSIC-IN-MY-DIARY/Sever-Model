@@ -25,9 +25,11 @@ class AuthenticationData:
             raise ValueError("환경 변수 설정이 제대로 되지 않았습니다.")
 
     def get_conn(self):
-        return self.redis_port,self.redis_port
+        return self.redis_host,self.redis_port
+
     def get_token(self):
         return self.token
+
     def get_base_url(self):
         return self.base_url
 
