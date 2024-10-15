@@ -19,9 +19,9 @@ services:
       - ./data/dags:/opt/airflow/dags
       - ./data/logs:/opt/airflow/logs
     networks:
-      - redis_dairy_net
+      - dairy_net
 
 
 networks:
-  redis_dairy_net:
-    driver: bridge
+  dairy_net:
+    external: True

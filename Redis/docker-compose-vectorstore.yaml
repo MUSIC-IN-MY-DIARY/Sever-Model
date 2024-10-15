@@ -14,4 +14,4 @@ services:
 
 networks:
   dairy_net:
-    driver: bridge
+    external: True
