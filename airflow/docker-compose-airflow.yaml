@@ -1,18 +1,22 @@
 services:
   airflow:
+
     build:
       context: .
       dockerfile: Dockerfile
+
     container_name: airflow
+
     env_file:
       - .env
     environment:
-      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
-      - AIRFLOW__CORE__FERNET_KEY=${FERNET_KEY}
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=sqlite:////opt/airflow/airflow.db
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      AIRFLOW__CORE__EXECUTOR : ${AIRFLOW__CORE__EXECUTOR}
+      AIRFLOW__CORE__FERNET_KEY : ${AIRFLOW__CORE__FERNET_KEY}
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN : ${AIRFLOW__CORE__SQL_ALCHEMY_CONN}
+      AIRFLOW__WEBSERVER__BASE_URL : ${AIRFLOW__WEBSERVER__BASE_URL}
+      AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX : ${AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX}
+      AIRFLOW__CORE__LOAD_EXAMPLES : ${AIRFLOW__CORE__LOAD_EXAMPLES}
+
     ports:
       - "${AIRFLOW_WEB_PORT}:8080"
     volumes:
@@ -20,7 +24,6 @@ services:
       - ./data/logs:/opt/airflow/logs
     networks:
       - dairy_net
-
 
 networks:
   dairy_net:
