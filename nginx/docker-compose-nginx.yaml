@@ -1,0 +1,17 @@
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+    ports:
+      - "80:80"  # Nginx 포트 매핑
+
+    networks:
+      - dairy_net
+
+networks:
+  dairy_net:
+    external: True
