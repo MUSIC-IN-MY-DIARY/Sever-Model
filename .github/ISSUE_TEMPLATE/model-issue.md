@@ -18,29 +18,41 @@ assignees: ''
 ## TO-BE
 1. 1차 이전 완료 
    - `service`, `api`, `data` 로 구분 
+-----
 
+## 이후 문제 
+1. `airflow` 리버스 프록시 매핑시 문제 
+- 추후 서술 예정
 ### 트리구조 
 
 ```bash
 .
-├── LICENSE
-├── README.md
-├── data
-│   ├── data_load.py
-│   ├── redis_data
-│   └── test_data.json
-├── service
-│   ├── __pycache__
-│   ├── api
-│   ├── config
-│   ├── main.py
-│   ├── model
-│   └── requirments.txt
-└── venv
-    ├── bin
-    ├── include
-    ├── lib
-    └── pyvenv.cfg
+├── ./LICENSE
+├── ./README.md
+├── ./Redis
+│   ├── ./Redis/Dockerfile
+│   └── ./Redis/docker-compose-vectorstore.yaml
+├── ./airflow
+│   ├── ./airflow/Dockerfile
+│   ├── ./airflow/data
+│   └── ./airflow/docker-compose-airflow.yaml
+├── ./nginx
+│   ├── ./nginx/Dockerfile
+│   ├── ./nginx/docker-compose-nginx.yaml
+│   └── ./nginx/nginx.conf
+├── ./service
+│   ├── ./service/__pycache__
+│   ├── ./service/api
+│   ├── ./service/config
+│   ├── ./service/main.py
+│   ├── ./service/model
+│   └── ./service/requirments.txt
+└── ./venv
+    ├── ./venv/bin
+    ├── ./venv/include
+    ├── ./venv/lib
+    └── ./venv/pyvenv.cfg
+
 ```
 
 ## 캡쳐
@@ -51,3 +63,4 @@ assignees: ''
 ![이미지2](../image/image2.png)
 
 ~~기존 참조 범위를 벗어난 오류~~
+
