@@ -1,27 +1,24 @@
 services:
-  airflow:
-
+  airflow-webserver:
     build:
       context: .
       dockerfile: Dockerfile
-
-    container_name: airflow
+    container_name: airflow-webserver
 
     env_file:
       - .env
     environment:
-      AIRFLOW__CORE__EXECUTOR : ${AIRFLOW__CORE__EXECUTOR}
-      AIRFLOW__CORE__FERNET_KEY : ${AIRFLOW__CORE__FERNET_KEY}
-      AIRFLOW__CORE__SQL_ALCHEMY_CONN : ${AIRFLOW__CORE__SQL_ALCHEMY_CONN}
-      AIRFLOW__WEBSERVER__BASE_URL : ${AIRFLOW__WEBSERVER__BASE_URL}
-      AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX : ${AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX}
-      AIRFLOW__CORE__LOAD_EXAMPLES : ${AIRFLOW__CORE__LOAD_EXAMPLES}
-
+      - AIRFLOW__CORE__EXECUTOR=${AIRFLOW__CORE__EXECUTOR}
+      - AIRFLOW__CORE__FERNET_KEY=${AIRFLOW__CORE__FERNET_KEY}
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=${AIRFLOW__DATABASE__SQL_ALCHEMY_CONN}
+      - AIRFLOW__WEBSERVER__BASE_URL=${AIRFLOW__WEBSERVER__BASE_URL}
+      - AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX=${AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX}
+      - AIRFLOW__CORE__LOAD_EXAMPLES=${AIRFLOW__CORE__LOAD_EXAMPLES}
     ports:
       - "${AIRFLOW_WEB_PORT}:8080"
     volumes:
-      - ./data/dags:/opt/airflow/dags
-      - ./data/logs:/opt/airflow/logs
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
     networks:
       - dairy_net
 
