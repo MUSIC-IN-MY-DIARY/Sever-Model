@@ -1,11 +1,9 @@
 from datetime import datetime, timedelta
-
-from dags.controller import Controller
+from controll.controller import Controller
 
 # airflow
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-
 
 
 default_args = {

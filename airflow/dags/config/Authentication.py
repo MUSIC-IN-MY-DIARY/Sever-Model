@@ -6,9 +6,6 @@ from dotenv import load_dotenv
 
 class AuthenticationData:
     def __init__(self):
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        dotenv_path = os.path.join(base_dir,'..', '.env')
-        load_dotenv(dotenv_path)
 
         self.base_url = os.getenv('BASE_URLS')
         self.chart_url = os.getenv('CHART_URL')
@@ -20,9 +17,9 @@ class AuthenticationData:
         self.redis_host = os.getenv('REDIS_HOST')
         self.redis_port = os.getenv('REDIS_PORT')
 
-        # 환경 변수 체크
-        if not all([self.base_url, self.chart_url, self.detail_url, self.artist_url, self.user_agent]):
-            raise ValueError("환경 변수 설정이 제대로 되지 않았습니다.")
+        # # 환경 변수 체크
+        # if not all([self.base_url, self.chart_url, self.detail_url, self.artist_url, self.user_agent]):
+        #     raise ValueError("환경 변수 설정이 제대로 되지 않았습니다.")
 
     def get_conn(self):
         return self.redis_host,self.redis_port
