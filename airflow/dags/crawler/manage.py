@@ -1,5 +1,5 @@
 from redis import Redis
-from config.Authentication import Authentication
+import os
 
 class DataManager:
     def __init__(self):
@@ -7,8 +7,10 @@ class DataManager:
         Redis와 연결된 데이터 매니저 초기화
         """
 
-        redis_host, redis_port = Authentication().get_conㅈn()
-        self.redis_conn = Redis(host=redis_host, port=redis_port)
+        redis_host, redis_port, redis_password = os.getenv('REDIS_HOST', 'localhost'), \
+            os.getenv('REDIS_PORT', '1234'), \
+            os.getenv('REDIS_PASSWORD', '<PASSWORD>')
+        self.redis_conn = Redis(host=redis_host, port=redis_port, password=redis_password)
 
     def save_song(self, song_data):
         """
