@@ -1,9 +1,8 @@
 from openai import OpenAI
 # openai API
 
-from config.Authentication import Authentication
-# Modules
 
+import os
 from redis import Redis
 from redis.commands.search.query import Query
 import numpy as np
@@ -14,7 +13,7 @@ from typing import List
 class Embedding_Chatbot:
     def __init__(self, index_name='artist_vector_store'):
         self.client = OpenAI(
-            api_key=Authentication().get_token()
+            api_key=os.getenv("OPENAI_API_KEY"),
         )
         self.model_id = 'text-embedding-3-small'
         self.embedding_model = self.client\

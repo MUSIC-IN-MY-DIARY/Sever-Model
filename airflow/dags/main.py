@@ -16,14 +16,17 @@ default_args = {
     'retry_delay' : timedelta(minutes=5),
 }
 
+
+
 with DAG(
-    'user_automation',
+    dag_id='crawler',
     default_args=default_args,
     schedule_interval='@daily',
     catchup = False,
 ) as dag:
 
     crawler_task = PythonOperator(
+
         task_id = 'crawler_task',
         python_callable = Controller().main(),
         dag = dag,

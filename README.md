@@ -34,7 +34,7 @@
 │   ├── ./service/config
 │   ├── ./service/main.py
 │   ├── ./service/model
-│   └── ./service/requirments.txt
+│   └── ./service/requirements.txt
 └── ./venv
     ├── ./venv/bin
     ├── ./venv/include
