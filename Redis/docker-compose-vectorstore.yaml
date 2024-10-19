@@ -11,6 +11,14 @@ services:
     networks:
       - dairy_net
 
+  set_password:
+    image: redis/redis-stack:latest
+    depends_on:
+      - vector_stores
+    command: redis-cli -h ${REDIS_HOST} -p ${REDIS_PORT} CONFIG SET requirepass ${REDIS_PASSWORD}
+    networks:
+      - dairy_net
+
 networks:
   dairy_net:
     external: True
