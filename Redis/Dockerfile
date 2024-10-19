@@ -2,6 +2,3 @@
 FROM redis/redis-stack:latest
 
 COPY .env /etc/environment
-
-ARG REDIS_PASSWORD
-ENV REDIS_PASSWORD=$REDIS_PASSWORD
