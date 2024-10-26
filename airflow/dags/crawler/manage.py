@@ -2,7 +2,7 @@ from redis import Redis
 import os
 
 class DataManager:
-    def __init__(self):
+    def __init__(self, index_name='artist_vector_store'):
         """
         Redis와 연결된 데이터 매니저 초기화
         """
@@ -11,27 +11,28 @@ class DataManager:
             os.getenv('REDIS_PORT', '1234'), \
             os.getenv('REDIS_PASSWORD', '<PASSWORD>')
         self.redis_conn = Redis(host=redis_host, port=redis_port, password=redis_password)
+        self.index_name = index_name
 
     def save_song(self, song_data):
         """
-        곡 데이터를 Redis에 저장
+        곡 데이터를 Redis에 저장 (인덱스 이름 추가)
         :param song_data: 곡 정보 딕셔너리
         """
-        song_id = song_data['song_id']  # song_id 필드를 사용
-        # 각 필드를 hset으로 저장
+        song_id = song_data['song_id']
+        # 각 필드를 인덱스에 맞게 hset으로 저장
         for key, value in song_data.items():
-            self.redis_conn.hset(f"song:{song_id}", key, value)
+            self.redis_conn.hset(f"{self.index_name}:song:{song_id}", key, value)
         print(f"Saved song '{song_data['title']}' to Redis")
 
     def save_artist(self, artist_id, artist_data):
         """
-        아티스트 데이터를 Redis에 저장
+        아티스트 데이터를 Redis에 저장 (인덱스 이름 추가)
         :param artist_id: 아티스트 ID
         :param artist_data: 아티스트 정보 딕셔너리
         """
-        # 각 필드를 hset으로 저장
+        # 각 필드를 인덱스에 맞게 hset으로 저장
         for key, value in artist_data.items():
-            self.redis_conn.hset(f"artist:{artist_id}", key, value)
+            self.redis_conn.hset(f"{self.index_name}:artist:{artist_id}", key, value)
         print(f"Saved artist '{artist_data['name']}' to Redis")
 
     def get_song(self, song_id):
