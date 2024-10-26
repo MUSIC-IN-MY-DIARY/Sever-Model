@@ -21,14 +21,14 @@ default_args = {
 with DAG(
     dag_id='crawler',
     default_args=default_args,
-    schedule_interval='@daily',
     catchup = False,
+    schedule_interval=None,
 ) as dag:
 
     crawler_task = PythonOperator(
 
         task_id = 'crawler_task',
-        python_callable = Controller().main(),
+        python_callable = Controller().main,
         dag = dag,
     )
 

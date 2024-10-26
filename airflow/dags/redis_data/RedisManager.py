@@ -6,6 +6,9 @@ from redis.exceptions import ResponseError
 import numpy as np
 from openai import OpenAI
 
+
+from datetime import datetime
+
 import os
 
 
@@ -34,13 +37,13 @@ class RedisVectorStore:
                     TextField("artist", weight=3.0),     # 아티스트 이름 필드
                     TextField("album", weight=2.0),      # 앨범 이름 필드
                     TextField("genre", weight=1.0),      # 장르 필드
-                    NumericField("release_date"),        # 발매일 필드
+                    TextField("release_date"),        # 발매일 필드
                     TextField("lyrics", weight=1.0),     # 가사 필드 (저작권 고려 필요)
                     TextField("image"),                  # 이미지 URL 필드
                     TextField("song_id"),                # 곡 ID 필드
                     TextField("artist_id"),              # 아티스트 ID 필드
                     TextField("album_id"),               # 앨범 ID 필드
-                    NumericField("sys_date"),            # 아티스트 데뷔년도 필드 추가
+                    TextField("sys_date"),            # 아티스트 데뷔년도 필드 추가
                     VectorField("embedding",             # 임베딩 필드
                                 "FLAT",  # 또는 "HNSW" (검색 성능에 따라 선택)
                                 {

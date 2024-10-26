@@ -8,13 +8,20 @@ services:
       - REDIS_HOST=${REDIS_HOST}
     ports:
       - "${REDIS_PORT}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-h", "${REDIS_HOST}", "-p", "${REDIS_PORT}", "PING"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     networks:
       - dairy_net
 
+# 컨테이너 비밀번호 설정을 위한 서브 컨테이너
   set_password:
     image: redis/redis-stack:latest
     depends_on:
-      - vector_stores
+      vector_stores:
+        condition: service_healthy
     command: redis-cli -h ${REDIS_HOST} -p ${REDIS_PORT} CONFIG SET requirepass ${REDIS_PASSWORD}
     networks:
       - dairy_net
