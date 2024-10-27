@@ -20,6 +20,7 @@ services:
 # 컨테이너 비밀번호 설정을 위한 서브 컨테이너
   set_password:
     image: redis/redis-stack:latest
+    platform: linux/arm64
     depends_on:
       vector_stores:
         condition: service_healthy
