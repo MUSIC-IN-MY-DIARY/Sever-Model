@@ -1,6 +1,6 @@
 services:
   vector_stores:
-    image: asia-northeast3-docker.pkg.dev/cheorish/docker/redis:0.0.1
+    image: ${IMAGE_NAME}
     env_file:
       - .env
     environment:
