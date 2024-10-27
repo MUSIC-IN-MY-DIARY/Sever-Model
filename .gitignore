@@ -57,6 +57,7 @@ cover/
 
 .env
 
+.cheorish-2817fffee7e5.json
 # Translations
 *.mo
 *.pot
