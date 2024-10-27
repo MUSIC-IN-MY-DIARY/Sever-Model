@@ -1,6 +1,7 @@
 services:
   api:
     image: ${IMAGE_NAME}
+    platform: linux/arm64
     container_name: api
     ports:
       - "8000:8000"

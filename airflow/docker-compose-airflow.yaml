@@ -1,6 +1,7 @@
 services:
   airflow-webserver:
     image: ${IMAGE_NAME}
+    platform: linux/arm64
     container_name: airflow-webserver
 
     env_file:
