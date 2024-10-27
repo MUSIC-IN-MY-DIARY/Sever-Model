@@ -1,12 +1,13 @@
 services:
-  image: ${IAMGE_NAME}
-  container_name: api
-  env_file:
-    - .env
-  ports:
-    - "${PORT}:8000"
-  networks:
-    - dairy_net
+  api:
+    image: ${IMAGE_NAME}
+    container_name: api
+    env_file:
+      - .env
+    ports:
+      - "${PORT}:8000"
+    networks:
+      - dairy_net
 
 networks:
   dairy_net:
