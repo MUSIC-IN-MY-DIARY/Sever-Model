@@ -1,6 +1,7 @@
 from openai import OpenAI
 # openai API
 
+
 import os
 from redis import Redis
 from redis.commands.search.query import Query
@@ -84,7 +85,7 @@ class Embedding_Chatbot:
         context = self.create_context(question, max_len=max_len)
         system_message = """
         당신은 음악 전문가이자 작사가입니다. 사용자 질문에 따라 적절한 답변을 제공해야 합니다. 
-        곡정보를 물어보면 song_id 값만 return 해줘야 합니다.
+        곡정보나 아티스트 정보나 앨범 정보들을 질의하면 각각 ID 값을 제공해줍니다.
         """
 
         if context:
