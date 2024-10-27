@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+airflow/logs/
+
 # C extensions
 *.so
 
@@ -32,6 +34,8 @@ MANIFEST
 *.manifest
 *.spec
 
+
+cheorish-2817fffee7e5.json
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
@@ -53,6 +57,7 @@ cover/
 
 .env
 
+.cheorish-2817fffee7e5.json
 # Translations
 *.mo
 *.pot

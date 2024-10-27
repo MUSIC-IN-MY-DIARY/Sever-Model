@@ -6,14 +6,21 @@ from redis.exceptions import ResponseError
 import numpy as np
 from openai import OpenAI
 
-from config.Authentication import AuthenticationData
+
+from datetime import datetime
+
+import os
 
 
 class RedisVectorStore:
     def __init__(self, index_name='artist_vector_store'):
+        redis_host = os.getenv('REDIS_HOST')
+        redis_port = int(os.getenv('REDIS_PORT'))
+        redis_password = os.getenv('REDIS_PASSWORD')
+
         self.index_name = index_name
-        self.redis_conn = Redis(host='localhost', port=6379, db=0)
-        self.client = OpenAI(api_key=AuthenticationData().get_token())
+        self.redis_conn = Redis(host=redis_host, port=redis_port, db=0, password=redis_password)
+        self.client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
     def create_vector_index(self):
         """RediSearch 인덱스 생성"""
@@ -30,13 +37,13 @@ class RedisVectorStore:
                     TextField("artist", weight=3.0),     # 아티스트 이름 필드
                     TextField("album", weight=2.0),      # 앨범 이름 필드
                     TextField("genre", weight=1.0),      # 장르 필드
-                    NumericField("release_date"),        # 발매일 필드
+                    TextField("release_date"),        # 발매일 필드
                     TextField("lyrics", weight=1.0),     # 가사 필드 (저작권 고려 필요)
                     TextField("image"),                  # 이미지 URL 필드
                     TextField("song_id"),                # 곡 ID 필드
                     TextField("artist_id"),              # 아티스트 ID 필드
                     TextField("album_id"),               # 앨범 ID 필드
-                    NumericField("sys_date"),            # 아티스트 데뷔년도 필드 추가
+                    TextField("sys_date"),            # 아티스트 데뷔년도 필드 추가
                     VectorField("embedding",             # 임베딩 필드
                                 "FLAT",  # 또는 "HNSW" (검색 성능에 따라 선택)
                                 {
@@ -65,16 +72,18 @@ class RedisVectorStore:
         :param data_type: 'song' 또는 'artist'로 데이터 유형 지정
         :return: None
         """
+        # 로깅으로 데이터 형태와 ID 확인
         if data_type == 'song':
             # 곡 데이터 처리
-            content = f"{data['title']} by {data['artist']}, from album: {data['album']}, genre: {data['song_detail']['genre']}, released on: {data['song_detail']['sys_date']}"
-            # Embedding 생성
-            response = self.client.embeddings.create(
-                input=[content],
-                model='text-embedding-3-small'
-            )
-            embedding = response.data[0].embedding
+            print(f"Song details: {data['song_detail']}")  # sys_date 값 확인
+            sys_date = data['song_detail']['sys_date']
+            lyrics = data['song_detail']['lyric']
 
+            content = f"{data['title']} by {data['artist']}, from album: {data['album']}, genre: {data['song_detail']['genre']}, released on: {sys_date} lyrics : {lyrics}, song_id: {data['song_id']}"
+
+            # Embedding 생성
+            response = self.client.embeddings.create(input=[content], model='text-embedding-3-small')
+            embedding = response.data[0].embedding
             np_embedding = np.array(embedding, dtype=np.float32).tobytes()
 
             # Redis에 데이터 저장
@@ -82,17 +91,20 @@ class RedisVectorStore:
                 "title": data['title'],
                 "artist": data['artist'],
                 "album": data['album'],
-                "genre": data['song_detail']['genre'],  # song_detail에서 가져온 genre
+                "genre": data['song_detail']['genre'],
                 "lyrics": data['song_detail']['lyric'],
                 "image": data['image'],
                 "song_id": data['song_id'],
                 "artist_id": data['song_detail']['artist_id'],
                 "album_id": data['song_detail']['album_id'],
-                "sys_date": data['song_detail']['sys_date'],
-                "content": content,  # 곡의 요약 정보
-                "embedding": np_embedding  # 임베딩 벡터 저장
+                "sys_date": sys_date,
+                "content": content,
+                "embedding": np_embedding
             })
             print(f"Inserted data for song '{data['title']}'")
+            print(f"Inserting data for ID: {id}, Data type: {type(data)}")
+            print(f"Data content: {data}")
+
 
         elif data_type == 'artist':
             # 아티스트 데이터 처리 (title 없음)
