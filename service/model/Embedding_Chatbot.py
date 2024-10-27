@@ -1,9 +1,7 @@
 from openai import OpenAI
 # openai API
 
-from config.Authentication import Authentication
-# Modules
-
+import os
 from redis import Redis
 from redis.commands.search.query import Query
 import numpy as np
@@ -14,7 +12,7 @@ from typing import List
 class Embedding_Chatbot:
     def __init__(self, index_name='artist_vector_store'):
         self.client = OpenAI(
-            api_key=Authentication().get_token()
+            api_key=os.getenv("OPENAI_API_KEY"),
         )
         self.model_id = 'text-embedding-3-small'
         self.embedding_model = self.client\
@@ -22,7 +20,11 @@ class Embedding_Chatbot:
             .create
 
         # VectorStore
-        self.redis_conn = Redis()
+        self.redis_conn = Redis(
+            host=os.getenv("REDIS_HOST"),
+            port=os.getenv("REDIS_PORT"),
+            password=os.getenv("REDIS_PASSWORD"),
+        )
         self.index_name = index_name
 
         # 기초 model parts 생성
@@ -30,7 +32,7 @@ class Embedding_Chatbot:
         text = text.replace('\n', ' ')
         return self.embedding_model(
             input = [text],
-            model = model
+            model = 'text-embedding-3-small'
         ).data[0].embedding
 
     def search_similar_artist(self, query_text: str, top_k: int = 3):
@@ -41,17 +43,12 @@ class Embedding_Chatbot:
         :return:
         """
 
-        query_response = self.client.embeddings.create(
-            input=[query_text],
-            model='text-embedding-3-small'
-        )
-        query_embedding = query_response.data[0].embedding
+        query_embedding = self.get_embedding(query_text) # 기존 코드 간소화
+        np_query_embedding = np.array(query_embedding, dtype=np.float32).tobytes() # 리턴 값을 위해 바이트로 변환
 
-        np_query_embedding = np.array(query_embedding, dtype=np.float32).tobytes()
-
-        query = f"*=>[KNN {top_k} @embedding $vec_param AS dist]"
+        query = f"*=>[KNN {top_k} @embedding $embedding AS dist]" # KNN 기법으로, 임베딩 벡터필드란 안에서 일리야스로 dist /
         params_dict = {
-            "vec_param" : np_query_embedding,
+            "embedding" : np_query_embedding,
         }
         try:
             # Query 객체 생성 및 다이얼렉트 설정
@@ -87,6 +84,7 @@ class Embedding_Chatbot:
         context = self.create_context(question, max_len=max_len)
         system_message = """
         당신은 음악 전문가이자 작사가입니다. 사용자 질문에 따라 적절한 답변을 제공해야 합니다. 
+        곡정보를 물어보면 song_id 값만 return 해줘야 합니다.  
         """
 
         if context:

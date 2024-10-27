@@ -9,7 +9,7 @@
 2. 데이터 매니징 → `data_load.py`
 3. 서비스 및 모델 `service` 패키지
 4. 도커라이징 진행중 `redis`, `airflow`, `nginx` 완성
-
+5. 아티팩트 레지스트리 세팅 중
 
 ## 트리구조
 
@@ -34,7 +34,7 @@
 │   ├── ./service/config
 │   ├── ./service/main.py
 │   ├── ./service/model
-│   └── ./service/requirments.txt
+│   └── ./service/requirements.txt
 └── ./venv
     ├── ./venv/bin
     ├── ./venv/include

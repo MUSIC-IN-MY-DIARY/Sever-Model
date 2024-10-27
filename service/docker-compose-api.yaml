@@ -1,0 +1,13 @@
+services:
+  api:
+    image: asia-northeast3-docker.pkg.dev/cheorish/docker/api:0.0.1
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    networks:
+      - dairy_net
+
+networks:
+  dairy_net:
+    external: True

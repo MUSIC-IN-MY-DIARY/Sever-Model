@@ -2,12 +2,11 @@ from config.Authentication import AuthenticationData
 from cralwer.crawler import Crawler
 from cralwer.manage import DataManager
 from cralwer.parser import Parser
-from redis_data.RedisManager import RedisVectorStore
 
-import requests
-import time
+import time 
 
-class Controller:
+class Recontroller:
+
     def __init__(self):
         auth_data = AuthenticationData()
         self.base_url = auth_data.get_base_url()
@@ -20,20 +19,10 @@ class Controller:
         self.parser = Parser()
         self.manage = DataManager()
 
-        self.redis_manager = RedisVectorStore()
-
-    def main(self):
-        # 인덱스 생성
-
-        try:
-            self.redis_manager.create_vector_index()
-        except Exception as e:
-            print(f"Error creating index: {e}")
-
+    def crawl(self):
         # 차트 페이지 크롤링
         main_page = self.crawler.fetch_page(self.chart_url)
         songs = self.parser.parse_main_page(main_page)
-
 
         for song in songs:
             # 곡 상세 정보 크롤링
@@ -58,5 +47,5 @@ class Controller:
             time.sleep(3)
 
 if __name__ == '__main__':
-    controller = Controller()
-    controller.main()
+    controll = Recontroller()
+    controll.crawl()
