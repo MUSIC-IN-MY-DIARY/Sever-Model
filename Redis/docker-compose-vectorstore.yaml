@@ -1,6 +1,7 @@
 services:
   vector_stores:
     image: ${IMAGE_NAME}
+    platform: linux/arm64
     env_file:
       - .env
     environment:
