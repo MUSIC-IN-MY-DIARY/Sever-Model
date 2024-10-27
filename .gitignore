@@ -34,6 +34,8 @@ MANIFEST
 *.manifest
 *.spec
 
+
+cheorish-2817fffee7e5.json
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
