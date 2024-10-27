@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: asia-northeast3-docker.pkg.dev/cheorish/docker/nginx:0.0.1
+    image: ${IMAGE_NAME}
     container_name: nginx
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/nginx.conf

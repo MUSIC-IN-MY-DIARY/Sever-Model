@@ -1,6 +1,6 @@
 services:
   airflow-webserver:
-    image: asia-northeast3-docker.pkg.dev/cheorish/docker/airflow:0.0.1
+    image: ${IMAGE_NAME}
     container_name: airflow-webserver
 
     env_file:
@@ -20,7 +20,7 @@ services:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/flow/" ]
+      test: [ "CMD", "curl", "-f", "${URLS}" ]
       interval: 30s
       timeout: 10s
       retries: 5
