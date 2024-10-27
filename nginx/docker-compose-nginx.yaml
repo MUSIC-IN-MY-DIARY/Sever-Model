@@ -1,8 +1,6 @@
 services:
   nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: asia-northeast3-docker.pkg.dev/cheorish/docker/nginx:0.0.1
     container_name: nginx
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/nginx.conf

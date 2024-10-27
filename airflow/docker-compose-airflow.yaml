@@ -1,8 +1,6 @@
 services:
   airflow-webserver:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: asia-northeast3-docker.pkg.dev/cheorish/docker/airflow:0.0.1
     container_name: airflow-webserver
 
     env_file:
