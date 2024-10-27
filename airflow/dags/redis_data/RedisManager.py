@@ -77,9 +77,9 @@ class RedisVectorStore:
             # 곡 데이터 처리
             print(f"Song details: {data['song_detail']}")  # sys_date 값 확인
             sys_date = data['song_detail']['sys_date']
-            print(f"Sys_date: {sys_date}, Type: {type(sys_date)}")
+            lyrics = data['song_detail']['lyric']
 
-            content = f"{data['title']} by {data['artist']}, from album: {data['album']}, genre: {data['song_detail']['genre']}, released on: {sys_date}"
+            content = f"{data['title']} by {data['artist']}, from album: {data['album']}, genre: {data['song_detail']['genre']}, released on: {sys_date} lyrics : {lyrics}, song_id: {data['song_id']}"
 
             # Embedding 생성
             response = self.client.embeddings.create(input=[content], model='text-embedding-3-small')
