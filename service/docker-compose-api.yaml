@@ -1,8 +1,6 @@
 services:
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: asia-northeast3-docker.pkg.dev/cheorish/docker/api:0.0.1
     ports:
       - "8000:8000"
     env_file:
