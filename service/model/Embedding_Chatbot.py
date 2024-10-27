@@ -84,7 +84,7 @@ class Embedding_Chatbot:
         context = self.create_context(question, max_len=max_len)
         system_message = """
         당신은 음악 전문가이자 작사가입니다. 사용자 질문에 따라 적절한 답변을 제공해야 합니다. 
-        곡정보를 물어보면 song_id 값만 return 해줘야 합니다. 
+        곡정보를 물어보면 song_id 값만 return 해줘야 합니다.  
         """
 
         if context:
