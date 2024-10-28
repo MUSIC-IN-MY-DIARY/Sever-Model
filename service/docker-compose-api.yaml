@@ -1,6 +1,9 @@
 services:
   api:
     image: ${IMAGE_NAME}
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: api
     env_file:
       - .env

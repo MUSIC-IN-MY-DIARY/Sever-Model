@@ -8,7 +8,7 @@ from api.router.question.question import question_router
 from api.router.question.test import test_router
 # Modules
 
-app = FastAPI()
+app = FastAPI(root_path='/api/')
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,4 +20,4 @@ app.include_router(question_router)
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True, root_path="/api")
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
