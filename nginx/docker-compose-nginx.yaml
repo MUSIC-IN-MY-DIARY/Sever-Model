@@ -1,7 +1,6 @@
 services:
   nginx:
     image: ${IMAGE_NAME}
-    platform: linux/arm64
     container_name: nginx
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/nginx.conf

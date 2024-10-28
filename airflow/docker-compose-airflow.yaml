@@ -1,7 +1,6 @@
 services:
   airflow-webserver:
     image: ${IMAGE_NAME}
-    platform: linux/arm64
     container_name: airflow-webserver
 
     env_file:
@@ -14,6 +13,8 @@ services:
       - AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX=${AIRFLOW__WEBSERVER__ENABLE_PROXY_FIX}
       - AIRFLOW__CORE__LOAD_EXAMPLES=${AIRFLOW__CORE__LOAD_EXAMPLES}
       - AIRFLOW__CORE__DAGBAG_IMPORT_TIMEOUT=2000
+      - AIRFLOW_UID=${AIRFLOW_UID}
+      - AIRFLOW_GID=${AIRFLOW_GID}
     ports:
       - "${AIRFLOW_WEB_PORT}:8080"
 
