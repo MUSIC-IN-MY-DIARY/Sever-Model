@@ -1,7 +1,6 @@
 services:
   vector_stores:
     image: ${IMAGE_NAME}
-    platform: linux/arm64
     env_file:
       - .env
     environment:
@@ -14,17 +13,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-    networks:
-      - dairy_net
-
-# 컨테이너 비밀번호 설정을 위한 서브 컨테이너
-  set_password:
-    image: redis/redis-stack:latest
-    platform: linux/arm64
-    depends_on:
-      vector_stores:
-        condition: service_healthy
-    command: redis-cli -h ${REDIS_HOST} -p ${REDIS_PORT} CONFIG SET requirepass ${REDIS_PASSWORD}
     networks:
       - dairy_net
 
