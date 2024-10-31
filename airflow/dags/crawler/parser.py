@@ -31,22 +31,22 @@ class Parser:
         tree = html.fromstring(html_text)
         # 필요한 데이터 추출
         artist_href = tree.xpath('//div[@class="info"]/div[2]/a/@href')
-        artist_id = artist_href[0].split("'")[1] if artist_href else None
+        artist_id = artist_href[0].split("'")[1] if artist_href else 'Unknown Artist'
 
         sys_date_list = tree.xpath('//div[@class="meta"]/dl/dd[2]/text()')
-        sys_date = sys_date_list[0].strip() if sys_date_list else None
+        sys_date = sys_date_list[0].strip() if sys_date_list else 'Unknown Date'
 
         genre_list = tree.xpath('//div[@class="meta"]/dl/dd[3]/text()')
-        genre = genre_list[0].strip() if genre_list else None
+        genre = genre_list[0].strip() if genre_list else 'Unknown Genre'
 
         flac_list = tree.xpath('//div[@class="meta"]/dl/dd[4]/text()')
-        flac = flac_list[0].strip() if flac_list else None
+        flac = flac_list[0].strip() if flac_list else 'Unknown Quality'
 
         album_href = tree.xpath('//div[@class="meta"]/dl/dd[1]/a/@href')
-        album_id = album_href[0].split("'")[1] if album_href else None
+        album_id = album_href[0].split("'")[1] if album_href else 'Unknown Album'
 
         lyric_list = tree.xpath('//div[@class="wrap_lyric"]/div/text()')
-        lyric = ' '.join(lyric_list).strip() if lyric_list else None
+        lyric = ' '.join(lyric_list).strip() if lyric_list else 'No Lyrics Available'
 
         song_detail = {
             'artist_id': artist_id,
@@ -62,13 +62,14 @@ class Parser:
         tree = html.fromstring(html_text)
         # 필요한 데이터 추출
         debut_date_list = tree.xpath('//dl[@class="atist_info clfix"]/dd[1]/span/text()')
-        debut_date = debut_date_list[0] if debut_date_list else None
+        debut_date = debut_date_list[0] if debut_date_list else 'Unknown Debut Date'
 
         pattern = r'^\s*$'
         art_info_list = tree.xpath('//dl[@class="atist_info clfix"]/dd/text()')
-        art_info = [s.strip() for s in art_info_list if not re.match(pattern, s.strip())]
+        art_info = [s.strip() for s in art_info_list if not re.match(pattern, s.strip())] or ['Unknown Artist Info']
 
         awards = tree.xpath('//dl[@class="atist_info clfix"]/dd[@class="awarded"]/span/text()')
+        awards = awards if awards else ['No Awards']
 
         artist_detail = {
             'debut_date': debut_date,
