@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class QuestionSchema(BaseModel):
-    question: str
+    recommend : str
 
 class AnswerSchema(BaseModel):
     answer: str

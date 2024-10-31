@@ -5,7 +5,7 @@ import os
 from redis import Redis
 from redis.commands.search.query import Query
 import numpy as np
-from typing import List
+from typing import List, Dict
 
 # packages
 
@@ -80,11 +80,40 @@ class Embedding_Chatbot:
         return "\n".join(context_parts)
 
 
-    def answer_question(self, question: str, max_len: int = 1800) -> str:
+    def answer_question(self, question: str, max_len: int = 1800) -> List[Dict]:
         context = self.create_context(question, max_len=max_len)
         system_message = """
-        당신은 음악 전문가이자 작사가입니다. 사용자 질문에 따라 적절한 답변을 제공해야 합니다. 
-        곡정보를 물어보면 song_id 값만 return 해줘야 합니다.  
+        당신은 음악 전문가이자 작사가입니다. 
+        
+        사용자 요청이 노래 정보, 비슷한 장르를 추천해 달라는 질문이 왔을 때 노래 정보를 제공해주세요 다음 항목을 포함해야 합니다:
+        - title
+        - artist
+        - genre
+        - song_id
+        
+        예시 JSON 형식:
+        [
+            {
+                "song_title": "APT.",
+                "artist": "로제 (ROSÉ)",
+                "genre": "댄스",
+                "song_id": "38120327"
+            },
+            {
+                "song_title" : "UP (KARINA Solo)",
+                "artist": "aespa",
+                "genre": "댄스",
+                "song_id": "38077932"
+            },
+            {
+                "song_title" : "Supernova",
+                "artist": "aespa",
+                "genre": "댄스",
+                "song_id": "37524037"
+            }
+        ]
+        상기 양식에 맞게 노래 정보에 대해서 물어볼 때 결과를 JSON 형태로 제공해주세요 
+
         """
 
         if context:
@@ -112,6 +141,50 @@ class Embedding_Chatbot:
                 max_tokens=500,
             )
             return response.choices[0].message.content.strip()
+        except Exception as e:
+            print(f"응답 생성 중 오류 발생: {e}")
+            return "죄송합니다. 답변을 생성할 수 없습니다."
+
+    def generate_answer(self, question: str, max_len: int = 2800) -> str:
+        context = self.create_context(question, max_len=max_len)
+        system_message = """
+        당신은 음악 전문가이자 작사가입니다. 
+                 
+        사용자 요청이 가사 생성일 때 하기 형식에 맞게 노래가사를 생성해주세요. 출력 형식은 순수 문자열 형태로 제공해야 합니다.
+        예시 문자열 형식:
+        걸어가다가 몇 번이나 멈춰서, 네 모습이 없는 거리 위에서 혼자 남아 있다. 
+        그때, 함께였던 모든 순간들이 가슴을 파고드는 것 같아. 
+        빈자리가 자꾸만 커져, 돌아갈 수 없는 길 위에 서 있는 우리. 사랑이 이유라면 아프게 이별하는 건, 정말이지 할 수 없는 일 같아. 
+        더는 널 떠날 수 없는 나, 돌아갈 길은 멀지만 끝내 멈추지 못할 것 같아.
+        
+        상기 양식에 맞게 사용자가 얘기하는 조건에 맞는 노래 가사를 순수 문자열 형태로 제공해주세요.
+        """
+        if context:
+            message = f"질문: '{question}'\n\n관련 정보:\n{context}\n\n위의 정보를 참고하여 답변해 주세요."
+        else:
+            message = f"질문: '{question}'\n\n위 질문에 답변해 주세요."
+
+        try:
+            response = self.client\
+                .chat\
+                .completions\
+                .create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": system_message,
+                    },
+                    {
+                        "role": "user",
+                        "content": message
+                    },
+                ],
+                temperature=0.7,
+                max_tokens=500,
+            )
+            return response.choices[0].message.content.strip()
+        
         except Exception as e:
             print(f"응답 생성 중 오류 발생: {e}")
             return "죄송합니다. 답변을 생성할 수 없습니다."
