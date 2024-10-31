@@ -14,7 +14,7 @@ question_router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-# 기본 프레픽스, /question 이라는 엔드포인트로 띄워자게    됨
+# 기본 프레픽스, /recommend 이라는 엔드포인트로 띄워지게 됨
 
 @question_router.post("/", response_model=AnswerSchema)
 async def question_models(recommend: QuestionSchema):
