@@ -13,11 +13,11 @@ generate_router = APIRouter(
 )
 
 @generate_router.post("/", response_model=ReturnAnswer)
-async def generate_model(generate : GenerateSchema):
+async def generate_model(diaryContent : GenerateSchema):
     chat = Embedding_Chatbot()
     try:
-        generate_text = chat.generate_answer(generate.generate)
-        return ReturnAnswer(diaryContent = generate_text)
+        generate_text = chat.generate_answer(diaryContent.diaryContent)
+        return ReturnAnswer(answer= generate_text)
     except Exception as e :
         raise HTTPException(status_code=500, detail=str(e))
 

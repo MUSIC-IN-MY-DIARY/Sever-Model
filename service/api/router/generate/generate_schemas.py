@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
 class GenerateSchema(BaseModel):
-    generate : str
+    diaryContent : str
 
 class ReturnAnswer(BaseModel):
-    diaryContent : str
+    answer : str
 

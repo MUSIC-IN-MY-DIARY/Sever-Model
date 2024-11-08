@@ -7,6 +7,9 @@ from redis.commands.search.query import Query
 import numpy as np
 from typing import List, Dict
 
+
+
+
 # packages
 
 class Embedding_Chatbot:
