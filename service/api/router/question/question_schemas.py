@@ -4,4 +4,4 @@ class QuestionSchema(BaseModel):
     recommend : str
 
 class AnswerSchema(BaseModel):
-    answer: str
+    diaryContent: str

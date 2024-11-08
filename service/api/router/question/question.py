@@ -21,7 +21,7 @@ async def question_models(recommend: QuestionSchema):
     chatbot = Embedding_Chatbot()
     try:
         answer_text = chatbot.answer_question(recommend.recommend)
-        return AnswerSchema(answer=answer_text)
+        return AnswerSchema(diaryContent=answer_text)
     except Exception as e :
         raise HTTPException(status_code=500, detail=str(e))
 

@@ -17,7 +17,7 @@ async def generate_model(generate : GenerateSchema):
     chat = Embedding_Chatbot()
     try:
         generate_text = chat.generate_answer(generate.generate)
-        return ReturnAnswer(answer= generate_text)
+        return ReturnAnswer(diaryContent = generate_text)
     except Exception as e :
         raise HTTPException(status_code=500, detail=str(e))
 
