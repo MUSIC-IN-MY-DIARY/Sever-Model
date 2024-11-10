@@ -5,6 +5,9 @@ services:
 
     env_file:
       - .env
+
+    user: "${AIRFLOW_UID}:${AIRFLOW_GID}"
+
     environment:
       - AIRFLOW__CORE__EXECUTOR=${AIRFLOW__CORE__EXECUTOR}
       - AIRFLOW__CORE__FERNET_KEY=${AIRFLOW__CORE__FERNET_KEY}
