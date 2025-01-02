@@ -89,7 +89,7 @@ class Embedding_Chatbot:
         당신은 음악 전문가이자 작사가입니다. 
         
         사용자 요청이 노래 정보, 비슷한 장르를 추천해 달라는 질문이 왔을 때 노래 정보를 제공해주세요 다음 항목을 포함해야 합니다:
-        - title
+        - song_title
         - artist
         - genre
         - song_id
@@ -152,7 +152,7 @@ class Embedding_Chatbot:
         context = self.create_context(question, max_len=max_len)
         system_message = """
         당신은 음악 전문가이자 작사가입니다. 
-                 
+            
         사용자 요청이 가사 생성일 때 하기 형식에 맞게 노래가사를 생성해주세요. 출력 형식은 순수 문자열 형태로 제공해야 합니다.
         예시 문자열 형식:
         걸어가다가 몇 번이나 멈춰서, 네 모습이 없는 거리 위에서 혼자 남아 있다. 

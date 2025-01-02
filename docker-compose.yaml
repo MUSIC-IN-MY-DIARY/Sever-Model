@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./service
+    env_file:
+      - .env
+    networks:
+      - diary_net
+    depends_on:
+      - vector_stores
+
+  vector_stores:
+    image: redis/redis-stack:latest
+    env_file:
+      - .env
+    ports:
+      - '${REDIS_PORT}:6379'
+    networks:
+      - diary_net
+
+networks:
+  diary_net:
+    name: diary_net
