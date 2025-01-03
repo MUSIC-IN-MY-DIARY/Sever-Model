@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os
 
 # root_path 설정 추가
-app = FastAPI(root_path="/api")  # root_path 설정
+app = FastAPI(root_path="/api/v2")  # root_path 설정
 
 app.add_middleware(
     CORSMiddleware,
