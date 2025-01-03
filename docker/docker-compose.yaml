@@ -17,10 +17,10 @@ services:
     networks:
       - mimd-network
 
-  redis:
-    image: redis:6.2
-    container_name: project-redis
-    ports:
-      - '6379:6379'
-    networks:
-      - mimd-network
+  # redis:
+  #   image: redis:6.2
+  #   container_name: project-redis
+  #   ports:
+  #     - '6379:6379'
+  # networks:
+  #   - mimd-network
