@@ -1,5 +1,9 @@
 version: '3.8'
 
+networks:
+  mimd-network:
+    external: true
+
 services:
   app:
     image: cseeeee/fastapi-diary:latest
@@ -10,9 +14,13 @@ services:
       - PYTHONUNBUFFERED=1
     depends_on:
       - redis
+    networks:
+      - mimd-network
 
   redis:
     image: redis:6.2
     container_name: project-redis
     ports:
       - '6379:6379'
+    networks:
+      - mimd-network
